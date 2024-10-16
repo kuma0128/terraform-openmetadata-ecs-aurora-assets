@@ -1,0 +1,12 @@
+**/.DS_Store
+**/*.log
+**/.vscode/*
+**/.env
+# Terraform
+**/.terraform/*
+**/terraform.tfstate
+**/*.dot
+**/terraform.tfvars
+**/.terraform.lock.hcl
+**/script/*
+**/Makefile/*
