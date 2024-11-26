@@ -31,6 +31,14 @@ resource "aws_ecs_task_definition" "openmetadata" {
       name      = "openmetadata_elasticsearch"
       image     = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/elasticsearch:${var.elasticsearch_tag}"
       essential = true
+      
+      ulimits = [
+        {
+          name      = "nofile"
+          hardLimit = 65535
+          softLimit = 65535
+        }
+      ]
 
       environment = [
         {
@@ -60,7 +68,7 @@ resource "aws_ecs_task_definition" "openmetadata" {
       ]
 
       healthCheck = {
-        command     = ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health?pretty | grep status | grep -qE 'green|yellow' || exit 1"]
+        command     = ["CMD-SHELL", "curl -s -u elastic:$ELASTIC_PASSWORD http://localhost:9200/_cluster/health?pretty | grep status | grep -qE 'green|yellow' || exit 1"]
         interval    = 15
         timeout     = 10
         retries     = 10
