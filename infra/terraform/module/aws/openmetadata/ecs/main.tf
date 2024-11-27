@@ -31,7 +31,7 @@ resource "aws_ecs_task_definition" "openmetadata" {
       name      = "openmetadata_elasticsearch"
       image     = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/elasticsearch:${var.elasticsearch_tag}"
       essential = true
-      
+
       ulimits = [
         {
           name      = "nofile"
@@ -79,7 +79,7 @@ resource "aws_ecs_task_definition" "openmetadata" {
         logDriver = "awslogs"
         options = {
           "awslogs-group"         = var.elastic_search_log_group_name
-          "awslogs-region"        = "ap-northeast-1"
+          "awslogs-region"        = var.region
           "awslogs-stream-prefix" = "ecs"
         }
       }

@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     aws = {
-      version = "~> 5.68.0"
+      version = "~> 5.78.0"
     }
   }
   # backend "s3" {
@@ -13,7 +13,7 @@ terraform {
   backend "local" {
     path = "local.tfstate"
   }
-  required_version = "~> 1.9.7"
+  required_version = "~> 1.10.0"
 }
 
 provider "aws" {

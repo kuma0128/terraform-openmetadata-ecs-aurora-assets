@@ -11,9 +11,13 @@ resource "aws_iam_policy" "ecs_task_execution" {
 }
 
 resource "aws_iam_role" "ecs_task_execution" {
-  name                = "${var.name_prefix}-role-${var.region_short_name}-ecs-task-execution"
-  assume_role_policy  = file("${path.module}/iam_assume_role_policy/ecs_task_exec.json.tpl")
-  managed_policy_arns = [aws_iam_policy.ecs_task_execution.arn]
+  name               = "${var.name_prefix}-role-${var.region_short_name}-ecs-task-execution"
+  assume_role_policy = file("${path.module}/iam_assume_role_policy/ecs_task_exec.json.tpl")
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
+  role       = aws_iam_role.ecs_task_execution.name
+  policy_arn = aws_iam_policy.ecs_task_execution.arn
 }
 
 resource "aws_iam_policy" "ecs_task" {
@@ -37,5 +41,9 @@ resource "aws_iam_role" "ecs_task" {
       account_id = data.aws_caller_identity.current.account_id
     }
   )
-  managed_policy_arns = [aws_iam_policy.ecs_task.arn]
+}
+
+resource "aws_iam_role_policy_attachment" "ecs_task" {
+  role       = aws_iam_role.ecs_task.name
+  policy_arn = aws_iam_policy.ecs_task.arn
 }
