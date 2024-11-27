@@ -8,7 +8,7 @@ terraform {
   #   bucket         = "ethan-s3-apne1-tfstate"
   #   region         = "ap-northeast-1"
   #   key            = "ethan/dev/backend/remote.tfstate"
-  #   dynamodb_table = "ethan-dynamodb-apne1-tfstate-lock"
+  #   use_lockfile   = true
   # }
   backend "local" {
     path = "local.tfstate"
