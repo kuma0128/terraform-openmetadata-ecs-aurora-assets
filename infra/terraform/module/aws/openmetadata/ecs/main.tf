@@ -42,7 +42,7 @@ resource "aws_ecs_task_definition" "openmetadata" {
 
       environment = [
         {
-          name  = "ELASTICSEARCH_PASSWORD"
+          name  = "ELASTIC_PASSWORD"
           value = jsondecode(data.aws_secretsmanager_secret_version.openmetadata.secret_string)["elasticsearch"]
         }
       ]
