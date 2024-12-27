@@ -28,4 +28,3 @@ echo "  ||||||||||| "
 echo "    ||||||| "
 echo "Starting OpenMetadata Server"
 ./bin/openmetadata-server-start.sh conf/openmetadata.yaml
-

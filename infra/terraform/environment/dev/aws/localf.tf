@@ -32,8 +32,8 @@ locals {
       "openmetadata/ingestion"
     ]
     elasticsearch_tag     = "8.11.4"
-    openmetadata_tag      = "1.5.3"
-    ingestion_tag         = "1.5.3"
+    openmetadata_tag      = "1.6.1"
+    ingestion_tag         = "1.6.1"
     log_retention_in_days = 30
   }
 }
