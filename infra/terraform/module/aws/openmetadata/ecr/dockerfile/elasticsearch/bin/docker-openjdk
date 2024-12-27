@@ -11,3 +11,4 @@ trust extract \
   --filter=ca-anchors \
   --purpose=server-auth \
   /usr/share/elasticsearch/jdk/lib/security/cacerts
+  
