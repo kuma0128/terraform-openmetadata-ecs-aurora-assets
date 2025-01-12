@@ -29,18 +29,18 @@ jobs:
       run: tflint --init
 
     - name: Run TFLint against modules
-        run: |
-          #!/usr/bin/env bash
+      run: |
+        #!/usr/bin/env bash
 
-          ROOT_DIR=$GITHUB_WORKSPACE
-          TFLINT_CONFIG_FILE="$ROOT_DIR/.tflint.hcl"
-          MODULES_DIR="$ROOT_DIR/infra/terraform"
+        ROOT_DIR=$GITHUB_WORKSPACE
+        TFLINT_CONFIG_FILE="$ROOT_DIR/.tflint.hcl"
+        MODULES_DIR="$ROOT_DIR/infra/terraform"
 
-          for module_dir in $(find "$MODULES_DIR" -maxdepth 5 -type d); do
-            echo "Running tflint at: $module_dir"
-            pushd "$module_dir" >/dev/null
-              TFLINT_CONFIG_FILE="$TFLINT_CONFIG_FILE" tflint --recursive
-            popd >/dev/null
-          done
+        for module_dir in $(find "$MODULES_DIR" -maxdepth 5 -type d); do
+          echo "Running tflint at: $module_dir"
+          pushd "$module_dir" >/dev/null
+            TFLINT_CONFIG_FILE="$TFLINT_CONFIG_FILE" tflint --recursive
+          popd >/dev/null
+        done
 
     
