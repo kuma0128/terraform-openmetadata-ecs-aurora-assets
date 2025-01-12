@@ -49,10 +49,7 @@ resource "aws_s3_bucket_public_access_block" "this" {
 resource "terraform_data" "copy_docker_environments" {
   triggers_replace = [
     aws_s3_bucket.this.id,
-    filesha256("${path.module}/environment_files/elastic_search.env"),
-    filesha256("${path.module}/environment_files/migrate_all.env"),
-    filesha256("${path.module}/environment_files/openmetadata_server.env"),
-    filesha256("${path.module}/environment_files/openmetadata_ingestion.env"),
+    filesha256("${path.module}/environment_files/*.env"),
   ]
 
   provisioner "local-exec" {
