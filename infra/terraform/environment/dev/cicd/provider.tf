@@ -4,7 +4,7 @@ terraform {
       source = "hashicorp/aws"
       version = "~> 5.83.1"
     }
-    
+
     http = {
       source  = "hashicorp/http"
       version = "~> 3.4.5"
@@ -18,8 +18,8 @@ terraform {
   # backend "s3" {
   #   bucket         = "ethan-s3-apne1-tfstate"
   #   region         = "ap-northeast-1"
-  #   key            = "ethan/dev/aws/remote.tfstate"
-  #  use_lockfile   = true
+  #   key            = "ethan/dev/cicd/remote.tfstate"
+  #   use_lockfile   = true
   # }
   backend "local" {
     path = "local.tfstate"
@@ -29,12 +29,4 @@ terraform {
 
 provider "aws" {
   region = "ap-northeast-1"
-}
-
-provider "http" {
-  # Configuration options
-}
-
-provider "random" {
-  # Configuration options
 }

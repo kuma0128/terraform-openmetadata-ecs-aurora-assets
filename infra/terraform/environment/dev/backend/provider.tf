@@ -1,7 +1,18 @@
 terraform {
   required_providers {
     aws = {
-      version = "~> 5.78.0"
+      source = "hashicorp/aws"
+      version = "~> 5.83.1"
+    }
+    
+    http = {
+      source  = "hashicorp/http"
+      version = "~> 3.4.5"
+    }
+
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.6.3"
     }
   }
   # backend "s3" {
@@ -13,7 +24,7 @@ terraform {
   backend "local" {
     path = "local.tfstate"
   }
-  required_version = "~> 1.10.0"
+  required_version = "~> 1.10.4"
 }
 
 provider "aws" {
