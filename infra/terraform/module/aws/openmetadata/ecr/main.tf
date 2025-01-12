@@ -16,8 +16,7 @@ resource "aws_ecr_repository" "openmetadata" {
 resource "terraform_data" "build_elasticsearch_image" {
   triggers_replace = [
     aws_ecr_repository.openmetadata["elasticsearch"].id,
-    filesha256("${path.module}/dockerfile/elasticsearch/Dockerfile"),
-    filesha256("${path.module}/dockerfile/elasticsearch/image_build.sh")
+    filesha256(data.archive_file.elasticsearch.output_path)
   ]
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
@@ -36,8 +35,7 @@ resource "terraform_data" "build_elasticsearch_image" {
 resource "terraform_data" "build_ingestion_image" {
   triggers_replace = [
     aws_ecr_repository.openmetadata["openmetadata/ingestion"].id,
-    filesha256("${path.module}/dockerfile/ingestion/Dockerfile"),
-    filesha256("${path.module}/dockerfile/ingestion/image_build.sh")
+    filesha256(data.archive_file.ingestion.output_path)
   ]
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
@@ -56,8 +54,7 @@ resource "terraform_data" "build_ingestion_image" {
 resource "terraform_data" "build_openmetadata_image" {
   triggers_replace = [
     aws_ecr_repository.openmetadata["openmetadata/server"].id,
-    filesha256("${path.module}/dockerfile/openmetadata/Dockerfile"),
-    filesha256("${path.module}/dockerfile/openmetadata/image_build.sh")
+    filesha256(data.archive_file.openmetadata.output_path)
   ]
   provisioner "local-exec" {
     interpreter = ["/bin/bash", "-c"]
