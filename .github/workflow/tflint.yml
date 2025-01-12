@@ -1,0 +1,46 @@
+name: TFLint
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+jobs:
+  tflint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      name: Checkout source code
+
+    - uses: actions/cache@v4
+      name: Cache plugin dir
+      with:
+        path: ~/.tflint.d/plugins
+        key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
+
+    - uses: terraform-linters/setup-tflint@v4
+      name: Setup TFLint
+      with:
+        tflint_version: v0.54.0
+
+    - name: Init TFLint
+      run: tflint --init
+
+    - name: Run TFLint against modules
+        run: |
+          #!/usr/bin/env bash
+
+          ROOT_DIR=$GITHUB_WORKSPACE
+          TFLINT_CONFIG_FILE="$ROOT_DIR/.tflint.hcl"
+          MODULES_DIR="$ROOT_DIR/infra/terraform"
+
+          for module_dir in $(find "$MODULES_DIR" -maxdepth 5 -type d); do
+            echo "Running tflint at: $module_dir"
+            pushd "$module_dir" >/dev/null
+              TFLINT_CONFIG_FILE="$TFLINT_CONFIG_FILE" tflint --recursive
+            popd >/dev/null
+          done
+
+    
