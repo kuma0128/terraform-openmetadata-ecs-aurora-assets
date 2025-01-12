@@ -30,3 +30,11 @@ terraform {
 provider "aws" {
   # Configuration options
 }
+
+provider "http" {
+  # Configuration options
+}
+
+provider "random" {
+  # Configuration options
+}
