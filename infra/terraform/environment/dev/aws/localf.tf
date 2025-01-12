@@ -35,5 +35,6 @@ locals {
     openmetadata_tag      = "1.6.1"
     ingestion_tag         = "1.6.1"
     log_retention_in_days = 30
+    desired_count         = 1
   }
 }

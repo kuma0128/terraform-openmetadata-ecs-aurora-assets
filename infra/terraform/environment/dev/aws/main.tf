@@ -99,6 +99,7 @@ module "openmetadata_ecs" {
   name_prefix                         = "${local.common.pj_name}-${local.common.env}"
   subnet_a_private_id                 = module.network.subnet_a_private_id
   subnet_c_private_id                 = module.network.subnet_c_private_id
+  desired_count                       = local.openmetadata.desired_count
   domain_name                         = local.openmetadata.domain_name
   elasticsearch_tag                   = local.openmetadata.elasticsearch_tag
   openmetadata_tag                    = local.openmetadata.openmetadata_tag

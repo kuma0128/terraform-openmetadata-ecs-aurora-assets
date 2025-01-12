@@ -272,7 +272,7 @@ resource "aws_ecs_service" "this" {
   name                   = "openmetadata-service"
   cluster                = aws_ecs_cluster.this.id
   task_definition        = aws_ecs_task_definition.openmetadata.arn
-  desired_count          = 1
+  desired_count          = var.desired_count
   launch_type            = "FARGATE"
   platform_version       = "LATEST"
   enable_execute_command = true
