@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 ROOT_DIR="/mnt/c/project/openmetadata-assets"
 TFLINT_CONFIG_FILE="$ROOT_DIR/.tflint.hcl"
