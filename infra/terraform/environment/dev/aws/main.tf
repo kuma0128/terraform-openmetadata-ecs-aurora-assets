@@ -7,7 +7,6 @@ module "iam_github_oidc" {
 
 module "network" {
   source               = "../../../module/aws/network"
-  env                  = local.common.env
   name_prefix          = "${local.common.pj_name}-${local.common.env}"
   region               = local.common.region
   region_short_name    = local.common.region_short_name
@@ -72,8 +71,6 @@ module "openmetadata_aurora" {
 
 module "openmetadata_ecr" {
   source            = "../../../module/aws/openmetadata/ecr"
-  allowed_ip_list   = local.common.allowed_ip_list
-  vpc_id            = module.network.vpc_id
   ecr_kms_key_arn   = module.openmetadata_kms_key.ecr_kms_key_arn
   repository_list   = local.openmetadata.repository_list
   elasticsearch_tag = local.openmetadata.elasticsearch_tag
