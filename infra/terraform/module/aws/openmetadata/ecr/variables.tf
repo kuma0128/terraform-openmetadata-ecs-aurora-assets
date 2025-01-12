@@ -1,8 +1,3 @@
-variable "allowed_ip_list" {
-  type = list(string)
-  description = "value of the allowed ip list"
-}
-
 variable "repository_list" {
   type = list(string)
   description = "value of the repository list"
@@ -24,11 +19,6 @@ variable "ingestion_tag" {
 }
 
 # child inputs
-variable "vpc_id" {
-  type = string
-  description = "value of the vpc id"
-}
-
 variable "ecr_kms_key_arn" {
   type = string
   description = "value of the ecr kms key arn"

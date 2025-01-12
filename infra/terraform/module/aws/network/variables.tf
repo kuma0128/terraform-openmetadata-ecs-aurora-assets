@@ -1,8 +1,3 @@
-variable "env" {
-  type = string
-  description = "value of the environment"
-}
-
 variable "region" {
   type = string
   description = "value of the region"
