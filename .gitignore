@@ -2,6 +2,8 @@
 **/*.log
 **/.vscode/*
 **/.env
+**/*.der
+
 # Terraform
 **/.terraform/*
 **/terraform.tfstate
