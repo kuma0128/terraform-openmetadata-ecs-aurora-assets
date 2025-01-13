@@ -33,7 +33,7 @@ VERSIONS = {
     "neo4j": "neo4j~=5.3.0",
     "pandas": "pandas~=2.0.0",
     "pyarrow": "pyarrow~=16.0",
-    "pydantic": "pydantic~=2.0",
+    "pydantic": "pydantic~=2.0,>=2.7.0",
     "pydomo": "pydomo~=0.3",
     "pymysql": "pymysql~=1.0",
     "pyodbc": "pyodbc>=4.0.35,<5",
@@ -46,7 +46,7 @@ VERSIONS = {
     "databricks-sdk": "databricks-sdk>=0.18.0,<0.20.0",
     "trino": "trino[sqlalchemy]",
     "spacy": "spacy<3.8",
-    "looker-sdk": "looker-sdk>=22.20.0",
+    "looker-sdk": "looker-sdk>=22.20.0,!=24.18.0",
     "lkml": "lkml~=1.3",
     "tableau": "tableau-api-lib~=0.1",
     "pyhive": "pyhive[hive_pure_sasl]~=0.7",
@@ -76,7 +76,7 @@ COMMONS = {
     },
     "kafka": {
         VERSIONS["avro"],
-        "confluent_kafka==2.1.1",
+        "confluent_kafka>=2.1.1,<=2.6.1",
         "fastavro>=1.2.0",
         # Due to https://github.com/grpc/grpc/issues/30843#issuecomment-1303816925
         # use >= v1.47.2 https://github.com/grpc/grpc/blob/v1.47.2/tools/distrib/python/grpcio_tools/grpc_version.py#L17
@@ -137,16 +137,20 @@ base_requirements = {
     "requests>=2.23",
     "requests-aws4auth~=1.1",  # Only depends on requests as external package. Leaving as base.
     "sqlalchemy>=1.4.0,<2",
-    "collate-sqllineage~=1.4.0",
+    "collate-sqllineage~=1.6.0",
     "tabulate==0.9.0",
     "typing-inspect",
     "packaging",  # For version parsing
+    "shapely",
+    "collate-data-diff",
 }
 
 plugins: Dict[str, Set[str]] = {
     "airflow": {
-        VERSIONS["airflow"],
+        "opentelemetry-exporter-otlp==1.27.0",
+        "protobuf<5",
         "attrs",
+        VERSIONS["airflow"],
     },  # Same as ingestion container. For development.
     "amundsen": {VERSIONS["neo4j"]},
     "athena": {"pyathena~=3.0"},
@@ -183,7 +187,7 @@ plugins: Dict[str, Set[str]] = {
         VERSIONS["azure-storage-blob"],
         VERSIONS["azure-identity"],
     },
-    "db2": {"ibm-db-sa~=0.3"},
+    "db2": {"ibm-db-sa~=0.4.1", "ibm-db>=2.0.0"},
     "db2-ibmi": {"sqlalchemy-ibmi~=0.9.3"},
     "databricks": {
         VERSIONS["sqlalchemy-databricks"],
@@ -207,14 +211,14 @@ plugins: Dict[str, Set[str]] = {
         *COMMONS["datalake"],
     },
     "datalake-s3": {
-        # requires aiobotocore
-        # https://github.com/fsspec/s3fs/blob/9bf99f763edaf7026318e150c4bd3a8d18bb3a00/requirements.txt#L1
-        # however, the latest version of `s3fs` conflicts its `aiobotocore` dep with `boto3`'s dep on `botocore`.
-        # Leaving this marked to the automatic resolution to speed up installation.
-        "s3fs",
+        # vendoring 'boto3' to keep all dependencies aligned (s3fs, boto3, botocore, aiobotocore)
+        "s3fs[boto3]",
         *COMMONS["datalake"],
     },
-    "deltalake": {"delta-spark<=2.3.0", "deltalake~=0.17"},
+    "deltalake": {
+        "delta-spark<=2.3.0",
+        "deltalake~=0.17,<0.20",
+    },  # TODO: remove pinning to under 0.20 after https://github.com/open-metadata/OpenMetadata/issues/17909
     "deltalake-storage": {"deltalake~=0.17"},
     "deltalake-spark": {"delta-spark<=2.3.0"},
     "domo": {VERSIONS["pydomo"]},
@@ -224,6 +228,7 @@ plugins: Dict[str, Set[str]] = {
     "elasticsearch": {
         VERSIONS["elasticsearch8"],
     },  # also requires requests-aws4auth which is in base
+    "exasol": {"sqlalchemy_exasol>=5,<6"},
     "glue": {VERSIONS["boto3"]},
     "great-expectations": {VERSIONS["great-expectations"]},
     "greenplum": {*COMMONS["postgres"]},
@@ -236,7 +241,7 @@ plugins: Dict[str, Set[str]] = {
         "impyla~=0.18.0",
     },
     "iceberg": {
-        "pyiceberg>=0.5",
+        "pyiceberg==0.5.1",
         # Forcing the version of a few packages so it plays nicely with other requirements.
         VERSIONS["pydantic"],
         VERSIONS["adlfs"],
@@ -258,6 +263,7 @@ plugins: Dict[str, Set[str]] = {
         VERSIONS["lkml"],
         "gitpython~=3.1.34",
         VERSIONS["giturlparse"],
+        "python-liquid",
     },
     "mlflow": {"mlflow-skinny>=2.3.0"},
     "mongo": {VERSIONS["mongo"], VERSIONS["pandas"], VERSIONS["numpy"]},
@@ -299,7 +305,6 @@ plugins: Dict[str, Set[str]] = {
         "psycopg2-binary",
         VERSIONS["geoalchemy2"],
     },
-    "mstr": {"mstr-rest-requests==0.14.1"},
     "sagemaker": {VERSIONS["boto3"]},
     "salesforce": {"simple_salesforce~=1.11"},
     "sample-data": {VERSIONS["avro"], VERSIONS["grpc-tools"]},
@@ -329,7 +334,7 @@ dev = {
     "isort",
     "pre-commit",
     "pycln",
-    "pylint~=3.0",
+    "pylint~=3.2.0",  # 3.3.0+ breaks our current linting
     # For publishing
     "twine",
     "build",
@@ -338,17 +343,18 @@ dev = {
 
 test = {
     # Install Airflow as it's not part of `all` plugin
+    "opentelemetry-exporter-otlp==1.27.0",
     VERSIONS["airflow"],
     "boto3-stubs",
     "mypy-boto3-glue",
     "coverage",
     # Install GE because it's not in the `all` plugin
     VERSIONS["great-expectations"],
-    "moto~=5.0",
     "basedpyright~=1.14",
     "pytest==7.0.0",
     "pytest-cov",
     "pytest-order",
+    "dirty-equals",
     # install dbt dependency
     "dbt-artifacts-parser",
     "freezegun",
@@ -372,7 +378,7 @@ test = {
     VERSIONS["grpc-tools"],
     VERSIONS["neo4j"],
     "testcontainers==3.7.1;python_version<'3.9'",
-    "testcontainers==4.8.0;python_version>='3.9'",
+    "testcontainers~=4.8.0;python_version>='3.9'",
     "minio==7.2.5",
     *plugins["mlflow"],
     *plugins["datalake-s3"],
@@ -380,7 +386,7 @@ test = {
     "kafka-python==2.0.2",
     *plugins["pii-processor"],
     "requests==2.31.0",
-    f"{DATA_DIFF['mysql']}==0.11.2",
+    f"{DATA_DIFF['mysql']}",
     *plugins["deltalake"],
     *plugins["datalake-gcs"],
     *plugins["pgspider"],

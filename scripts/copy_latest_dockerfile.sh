@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+# set -e
 
 ROOT_DIR="/mnt/c/project/openmetadata-assets/infra/terraform/module/aws/openmetadata/ecr/dockerfile"
 ELASTICSEARCH_TAG="8.11.4"
@@ -19,8 +19,8 @@ cleanup() {
 trap cleanup EXIT
 
 echo "=== Downloading zip ==="
-curl -fsSL "${ELASTICSEARCH_REPO}" -o "${TEMP_DIR_ELASTIC}/elastic.zip"
-curl -fsSL "${OPENMETADATA_REPO}" -o "${TEMP_DIR_OM}/openmetadata.zip"
+curl --retry 3 --retry-delay 5 -fsSL "${ELASTICSEARCH_REPO}" -o "${TEMP_DIR_ELASTIC}/elastic.zip"
+curl --retry 3 --retry-delay 5 -fsSL "${OPENMETADATA_REPO}" -o "${TEMP_DIR_OM}/openmetadata.zip"
 
 echo "=== Extracting zip ==="
 unzip -q "${TEMP_DIR_ELASTIC}/elastic.zip" -d "${TEMP_DIR_ELASTIC}"
@@ -34,50 +34,50 @@ rsync -av --delete --exclude="image_build.sh" \
 
 # ingestion
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/ingestion/examples/airflow/" \
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/ingestion/examples/airflow/" \
   "${ROOT_DIR}/ingestion/ingestion/examples/airflow/"
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/ingestion/examples/sample_data/" \
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/ingestion/examples/sample_data/" \
   "${ROOT_DIR}/ingestion/ingestion/examples/sample_data/"
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/ingestion/ingestion_dependency.sh" \
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/ingestion/ingestion_dependency.sh" \
   "${ROOT_DIR}/ingestion/ingestion/ingestion_dependency.sh"
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/ingestion/__init__.py" \
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/ingestion/__init__.py" \
   "${ROOT_DIR}/ingestion/__init__.py"
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/ingestion/Dockerfile" \
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/ingestion/Dockerfile" \
   "${ROOT_DIR}/ingestion/Dockerfile"
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/ingestion/pyproject.toml
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/ingestion/pyproject.toml
 " \
   "${ROOT_DIR}/ingestion/pyproject.toml
 "
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/ingestion/setup.py" \
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/ingestion/setup.py" \
   "${ROOT_DIR}/ingestion/setup.py"
 
 # openmetadata
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/bin/" \
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/bin/" \
   "${ROOT_DIR}/openmetadata/bin/"
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/bootstrap/" \
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/bootstrap/" \
   "${ROOT_DIR}/openmetadata/bootstrap/"
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/conf/" \
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/conf/" \
   "${ROOT_DIR}/openmetadata/conf/"
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/docker/openmetadata-start.sh" \
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/docker/openmetadata-start.sh" \
   "${ROOT_DIR}/openmetadata/docker/openmetadata-start.sh"
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/openmetadata-dist/" \
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/openmetadata-dist/" \
   "${ROOT_DIR}/openmetadata/openmetadata-dist/"
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/docker/development/Dockerfile" \
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/docker/development/Dockerfile" \
   "${ROOT_DIR}/openmetadata/Dockerfile"
 rsync -av --delete \
-  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/OpenMetadata/README.md" \
+  "${TEMP_DIR_OM}/OpenMetadata-${OPENMETADATA_TAG}/README.md" \
   "${ROOT_DIR}/openmetadata/README.md"
 
 echo "Done."
