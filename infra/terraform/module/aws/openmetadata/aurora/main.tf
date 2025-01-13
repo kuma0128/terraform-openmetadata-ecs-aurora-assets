@@ -22,7 +22,7 @@ resource "aws_rds_cluster" "aurora" {
   engine_mode                         = "provisioned"
   database_name                       = "openmetadata"
   master_username                     = "openmetadata_admin"
-  master_password                     = jsondecode(data.aws_secretsmanager_secret_version.aurora.secret_string).password
+  master_password                     = jsondecode(ephemeral.aws_secretsmanager_secret_version.aurora.secret_string).password
   storage_encrypted                   = true
   kms_key_id                          = var.aurora_kms_key_arn
   iam_database_authentication_enabled = true
@@ -32,7 +32,7 @@ resource "aws_rds_cluster" "aurora" {
   db_cluster_parameter_group_name     = aws_rds_cluster_parameter_group.aurora_param.name
   vpc_security_group_ids              = [var.aurora_security_group_id]
   skip_final_snapshot                 = true
-  backup_retention_period             = 7
+  backup_retention_period             = var.backup_retention_period
   preferred_backup_window             = "08:00-08:30"
   preferred_maintenance_window        = "sun:09:00-sun:09:30"
   enabled_cloudwatch_logs_exports     = ["postgresql"]
@@ -44,7 +44,7 @@ resource "aws_rds_cluster" "aurora" {
 }
 
 resource "aws_rds_cluster_instance" "aurora_instance" {
-  count                        = 2
+  count                        = var.instance_count
   identifier                   = "${var.name_prefix}-aurora-${var.region_short_name}-instance-${count.index}"
   cluster_identifier           = aws_rds_cluster.aurora.id
   instance_class               = "db.serverless"

@@ -62,6 +62,8 @@ module "openmetadata_aurora" {
   source                   = "../../../module/aws/openmetadata/aurora"
   name_prefix              = "${local.common.pj_name}-${local.common.env}"
   region_short_name        = local.common.region_short_name
+  backup_retention_period  = local.aurora.backup_retention_period
+  instance_count           = local.aurora.instance_count
   subnet_a_private_id      = module.network.subnet_a_private_id
   subnet_c_private_id      = module.network.subnet_c_private_id
   aurora_kms_key_arn       = module.openmetadata_kms_key.aurora_kms_key_arn

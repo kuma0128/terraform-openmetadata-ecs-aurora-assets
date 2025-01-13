@@ -32,3 +32,13 @@ variable "aurora_secret_name" {
   type        = string
   description = "value of the aurora secret name"
 }
+
+variable "backup_retention_period" {
+  type        = number
+  description = "value of the backup retention period"
+}
+
+variable "instance_count" {
+  type        = number
+  description = "value of the instance count"
+}
