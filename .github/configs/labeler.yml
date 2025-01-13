@@ -1,0 +1,14 @@
+infra:
+- any:
+  - changed-files:
+    - any-glob-to-any-file: 'infra/**'
+
+cicd:
+- any:
+  - changed-files:
+    - any-glob-to-any-file: '.github/**'
+    
+scripts:
+- any:
+  - changed-files:
+    - any-glob-to-any-file: 'scripts/**'
