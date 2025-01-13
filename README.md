@@ -5,7 +5,7 @@ This repository provides Terraform modules to deploy an ECS-based OpenMetadata s
 ## Key Notes
 
 - Separate the creation of ACM (AWS Certificate Manager) and Route 53 resources into a different Terraform state file to avoid coupling them tightly with the main infrastructure.
-- Based on experience, keeping modules as granular as possible is recommended, especially for disaster recovery (DR) scenarios.
+- Based on my experience, keeping modules as granular as possible is recommended, especially for disaster recovery (DR) scenarios.
 - **Warning**: This module does not implement non-functional requirements such as comprehensive operational support or robust security measures. Therefore, **it is not suitable for production environments without significant modifications**.
 
 ## Future Improvements (You Should Consider Adding)
