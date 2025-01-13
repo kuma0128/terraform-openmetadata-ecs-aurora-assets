@@ -22,10 +22,10 @@ jobs:
     if: ${{ github.ref_name == 'main' || github.event.inputs.environment == 'dev' }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4
         with:
           aws-region: ${{ env.aws_default_region }}
           role-to-assume: ${{ secrets.AWS_GITHUB_ACTIONS_OIDC_ROLE_ARN }}
@@ -46,12 +46,12 @@ jobs:
           sudo apt update
           sudo apt install maven
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4
         with:
           node-version: "18"
 
       - name: Setup-terraform
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3
         with:
           terraform_version: ${{ env.tf_version }}
 

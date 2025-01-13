@@ -9,21 +9,26 @@ on:
 env:
   tflint_version: v0.54.0
 
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
 jobs:
   tflint:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
       name: Checkout source code
 
-    - uses: actions/cache@v4
+    - uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57 # v4
       name: Cache plugin dir
       with:
         path: ~/.tflint.d/plugins
         key: ubuntu-latest-tflint-${{ hashFiles('.tflint.hcl') }}
 
-    - uses: terraform-linters/setup-tflint@v4
+    - uses: terraform-linters/setup-tflint@8093687ecc9dcbfa88d07c103ad4176739a7287e # v4
       name: Setup TFLint
       with:
         tflint_version:  ${{ env.tflint_version }}
